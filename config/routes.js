@@ -8,8 +8,6 @@
 var users = require('users');
 var games = require('games');
 var base = require('base');
-var comments = require('comments');
-var tags = require('tags');
 var auth = require('./middlewares/authorization');
 
 /**
@@ -50,16 +48,6 @@ module.exports = function (app, passport) {
 
     // home route
     app.get('/', games.index);
-
-    // comment routes
-    app.param('commentId', comments.load);
-    app.post('/games/:id/comments', auth.requiresLogin, comments.create);
-    app.get('/games/:id/comments', auth.requiresLogin, comments.create);
-    app.delete('/games/:id/comments/:commentId', commentAuth, comments.destroy);
-
-    // tag routes
-    app.get('/tags/:tag', tags.index);
-
 
     /**
      * Error handling
