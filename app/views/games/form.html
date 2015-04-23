@@ -7,9 +7,9 @@
 
 {% block content %}
   {% if article.isNew %}
-    {% set action = '/articles' %}
+    {% set action = '/games' %}
   {% else %}
-    {% set action = '/articles/' + article._id %}
+    {% set action = '/games/' + article._id %}
   {% endif %}
 
   <div class="row">

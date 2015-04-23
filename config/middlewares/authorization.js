@@ -31,7 +31,7 @@ exports.article = {
   hasAuthorization: function (req, res, next) {
     if (req.article.user.id != req.user.id) {
       req.flash('info', 'You are not authorized')
-      return res.redirect('/articles/' + req.article.id)
+      return res.redirect('/games/' + req.article.id)
     }
     next()
   }
@@ -49,7 +49,7 @@ exports.comment = {
       next()
     } else {
       req.flash('info', 'You are not authorized')
-      res.redirect('/articles/' + req.article.id)
+      res.redirect('/games/' + req.article.id)
     }
   }
 }

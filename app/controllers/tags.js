@@ -3,7 +3,7 @@
  */
 
 var mongoose = require('mongoose');
-var Article = mongoose.model('Article');
+var Games = mongoose.model('Games');
 
 /**
  * List items tagged with a tag
@@ -19,12 +19,12 @@ exports.index = function (req, res) {
     criteria: criteria
   };
 
-  Article.list(options, function(err, articles) {
+  Games.list(options, function(err, Gamess) {
     if (err) return res.render('500');
-    Article.count(criteria).exec(function (err, count) {
-      res.render('articles/index', {
-        title: 'Articles tagged ' + req.param('tag'),
-        articles: articles,
+    Games.count(criteria).exec(function (err, count) {
+      res.render('games/index', {
+        title: 'Gamess tagged ' + req.param('tag'),
+        Gamess: Gamess,
         page: page + 1,
         pages: Math.ceil(count / perPage)
       });
