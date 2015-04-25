@@ -9,7 +9,7 @@
         <input type="hidden" name="_csrf" value="{{ csrf_token }}">
 
         <p class="col-sm-offset-2 error">
-            {{ message }}
+            {{ error }}
         </p>
 
         <div class="form-group">
@@ -25,8 +25,6 @@
             </div>
         </div>
     </form>
-
-
     {% if Object.keys(gameList).length != 0 %}
         <div>
             <h1 style=" border-bottom: 1px solid #eee;
@@ -45,7 +43,7 @@
                 <div id="{{ game }}" class="panel-collapse collapse">
                     <div class="panel-body">
                         <p>Info about {{ game }}</p>
-                        <a class="btn btn-large btn-info" href="../../games/view/{{ game }}">Go to {{ game }}</a>
+                        <a class="btn btn-large btn-info" href="../../games/lobby/{{ game }}">Go to Game Lobby</a>
                     </div>
                 </div>
             </div>

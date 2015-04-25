@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose');
 var Games = mongoose.model('Games');
+var User = mongoose.model('User');
 var utils = require('../../lib/utils');
 var extend = require('util')._extend;
 
@@ -56,7 +57,7 @@ exports.create = function (req, res) {
     var game = new Games();
     game.name = req.body.gameTitle;
     game.adminUser = req.user.id;
-    game.userList.geoEngineers = req.user.id;
+    game.userList.uuids.push(req.user.id);
     game.save(function (err) {
         if (err) {
             return res.render('games/dashboard', {
@@ -78,6 +79,23 @@ exports.viewGame = function (req, res) {
     Games.getGameByTitle(req.user.id,gameTitle,doRender);
     function doRender(gameDoc){
         res.render('games/viewGame', {gameList: gameDoc });
+    }
+};
+
+exports.viewGameLobby = function (req, res) {
+    var gameTitle =  req.url.replace("/games/lobby/","");
+    Games.getGameByTitle(req.user.id,gameTitle,parseLobbyData);
+
+    function parseLobbyData(gameDoc){
+        var _usersList = [];
+        gameDoc["0"]._doc.userList.uuids.forEach(function (uuid) {
+            _usersList.push(uuid);
+        });
+        doRender(_usersList);
+    }
+
+    function doRender(usersList){
+        res.render('games/lobby', {usersList: usersList, userName: req.user.username });
     }
 };
 
@@ -131,7 +149,7 @@ exports.show = function (req, res) {
 };
 
 /**
- * Delete an Games
+ * Delete
  */
 
 exports.destroy = function (req, res) {

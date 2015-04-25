@@ -17,6 +17,7 @@ var GamesSchema = new Schema({
         nextToMove: {type: String, default: ''}
     },
     userList: {
+        uuids: [{type: String, default: ''}],
         geoEngineers: {type: String, default: ''},
         settlers: {type: String, default: ''},
         kingdomWatchers: {type: String, default: ''},
@@ -52,13 +53,10 @@ GamesSchema.statics = {
             });
 
         _query.exec(function (err, gamesOwned) {
-
             if (err) return next(err);
-            // results to array
             gamesOwned.forEach(function (game) {
                 _listOfGameNames.push(game.name.replace(/\s+/g, '-'));
             });
-            // return array
             callback(_listOfGameNames);
         });
     },

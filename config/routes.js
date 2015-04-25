@@ -14,8 +14,7 @@ var auth = require('./middlewares/authorization');
  * Route middlewares
  */
 
-var gamesAuth = [auth.requiresLogin, auth.article.hasAuthorization];
-var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
+var gamesAuth = [auth.requiresLogin, auth.games.hasAuthorization];
 
 /**
  * Expose routes
@@ -41,6 +40,7 @@ module.exports = function (app, passport) {
     app.get('/games/user/:userId', auth.requiresLogin, games.dashboard);
     app.post('/games/user/:userId', auth.requiresLogin, games.create);
     app.get('/games/view/:gameName', auth.requiresLogin, games.viewGame);
+    app.get('/games/lobby/:gameName', auth.requiresLogin, games.viewGameLobby);
     app.get('/games/:id', games.show);
     app.get('/games/:id/edit', gamesAuth, games.edit);
     app.put('/games/:id', gamesAuth, games.update);
