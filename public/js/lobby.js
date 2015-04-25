@@ -6,6 +6,9 @@ window.onload = function () {
     var sendButton = document.getElementById("send");
     var content = document.getElementById("content");
     var name = document.getElementById("name");
+    var room = window.location.pathname.replace(/.*\//, '');
+
+    socket.emit('create', room);
 
     socket.on('message', function (data) {
         if (data.message) {
@@ -22,8 +25,14 @@ window.onload = function () {
     });
 
     sendButton.onclick = function () {
-        var text = field.value;
-        socket.emit('send', {message: text, username: name.value});
+        socket.emit('send', room, {message: field.value, username: name.value});
+        $('#field').val('');
     };
+
+    $('#field').keydown(function(event){
+        if(event.keyCode==13){
+            $('#send').trigger('click');
+        }
+    });
 
 };
