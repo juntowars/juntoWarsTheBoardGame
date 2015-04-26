@@ -38,19 +38,7 @@ require('./config/routes')(app, passport);
 
 //app.listen(port);
 var io = require('socket.io').listen(app.listen(port));
-io.sockets.on('connection', function (socket) {
-
-    socket.emit('message', { message: 'welcome to the chat' });
-
-    socket.on('send', function (room,data) {
-        io.sockets.in(room).emit('message', data);
-    });
-
-    socket.on('create', function(room) {
-        console.log("someones in room: "+room);
-        socket.join(room);
-    });
-});
+require('./config/socket')(io);
 
 console.log('Express app started on port ' + port);
 

@@ -8,7 +8,7 @@ window.onload = function () {
     var name = document.getElementById("name");
     var room = window.location.pathname.replace(/.*\//, '');
 
-    socket.emit('create', room);
+    socket.emit('create', room, name.value);
 
     socket.on('message', function (data) {
         if (data.message) {
@@ -21,6 +21,15 @@ window.onload = function () {
             content.innerHTML = html;
         } else {
             console.log("There is a problem:", data);
+        }
+    });
+
+    socket.on('userJoined', function (data) {
+        var user = data.user;
+        if (user) {
+            users.innerHTML = users.innerHTML + user + '<br />';
+        } else {
+            console.log("There is a problem:", user);
         }
     });
 

@@ -35,12 +35,8 @@ exports.index = function (req, res) {
  */
 
 exports.dashboard = function (req, res) {
-    Games.getUsersGamesList(req.user.id,doRender);
-    function doRender(gameList){
-        res.render('games/dashboard', {gameList: gameList });
-    }
+    buildDashboard(req,res);
 };
-
 
 /**
  * New Games
@@ -65,28 +61,36 @@ exports.create = function (req, res) {
                 title: 'Error Creating Game'
             });
         }
-
-        Games.getUsersGamesList(req.user.id,doRender);
-        function doRender(gameList){
-            res.render('games/dashboard', {gameList: gameList });
-        }
+        buildDashboard(req,res);
     });
 };
 
+function buildDashboard(req,res){
+    function doRender(gameList, gamesToJoin) {
+        res.render('games/dashboard', {gameList: gameList, gamesToJoin: gamesToJoin});
+    }
+
+    function getOpenGames(req, gameList) {
+        Games.getOpenGamesList(req.user.id, gameList, doRender);
+    }
+
+    Games.getUsersGamesList(req, getOpenGames);
+}
+
 exports.viewGame = function (req, res) {
-    var gameTitle =  req.url.replace("/games/view/","");
-    console.log("Viewing gameTitle: "+gameTitle);
-    Games.getGameByTitle(req.user.id,gameTitle,doRender);
-    function doRender(gameDoc){
-        res.render('games/viewGame', {gameList: gameDoc });
+    var gameTitle = req.url.replace("/games/view/", "");
+    console.log("Viewing gameTitle: " + gameTitle);
+    Games.getGameByTitle(req.user.id, gameTitle, doRender);
+    function doRender(gameDoc) {
+        res.render('games/viewGame', {gameList: gameDoc});
     }
 };
 
 exports.viewGameLobby = function (req, res) {
-    var gameTitle =  req.url.replace("/games/lobby/","");
-    Games.getGameByTitle(req.user.id,gameTitle,parseLobbyData);
+    var gameTitle = req.url.replace("/games/lobby/", "");
+    Games.getGameByTitle(req.user.id, gameTitle, parseLobbyData);
 
-    function parseLobbyData(gameDoc){
+    function parseLobbyData(gameDoc) {
         var _usersList = [];
         gameDoc["0"]._doc.userList.uuids.forEach(function (uuid) {
             _usersList.push(uuid);
@@ -94,8 +98,8 @@ exports.viewGameLobby = function (req, res) {
         doRender(_usersList);
     }
 
-    function doRender(usersList){
-        res.render('games/lobby', {usersList: usersList, userName: req.user.username });
+    function doRender(usersList) {
+        res.render('games/lobby', {usersList: usersList, userName: req.user.username});
     }
 };
 

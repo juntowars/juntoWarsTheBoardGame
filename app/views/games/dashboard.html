@@ -50,4 +50,29 @@
         {% endfor %}
         </div>
     {% endif %}
+    {% if Object.keys(gameList).length != 0 %}
+        <div>
+            <h1 style=" border-bottom: 1px solid #eee;
+                        margin-top: 40px;">
+                Games to join
+            </h1>
+        </div>
+        <div class="panel-group" id="accordion">
+            {% for gameToJoin in gamesToJoin %}
+                <div class="panel panel-info">
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{ gameToJoin }}">
+                        <h4 class="panel-title accordion-toggle">
+                            {{ gameToJoin }}
+                        </h4>
+                    </div>
+                    <div id="{{ gameToJoin }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>Info about {{ gameToJoin }}</p>
+                            <a class="btn btn-large btn-info" href="../../games/lobby/{{ gameToJoin }}">Go to Game Lobby</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}

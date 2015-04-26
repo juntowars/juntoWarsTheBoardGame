@@ -35,6 +35,7 @@ var GamesSchema = new Schema({
         createdAt: {type: Date, default: Date.now}
     }],
     publicJoin: {type: Boolean, default: true},
+    lobby: {type: String, default: 'open'},
     adminUser: {type: String, default: ''},
     createdAt: {type: Date, default: Date.now}
 });
@@ -42,11 +43,11 @@ var GamesSchema = new Schema({
 GamesSchema.path('name').required(true, 'Games name cannot be blank');
 GamesSchema.methods = {};
 GamesSchema.statics = {
-    getUsersGamesList: function (userId, callback) {
+    getUsersGamesList: function (req, callback) {
         var _listOfGameNames = [];
 
         var _query = this.find(
-            {"adminUser": userId},
+            {"adminUser": req.user.id},
             {"name": 1},
             {
                 sort: {createdAt: -1}
@@ -57,7 +58,28 @@ GamesSchema.statics = {
             gamesOwned.forEach(function (game) {
                 _listOfGameNames.push(game.name.replace(/\s+/g, '-'));
             });
-            callback(_listOfGameNames);
+            callback(req,_listOfGameNames);
+        });
+    },
+
+    getOpenGamesList :function(uuid, gameList, fn){
+        var _listOfOpenGames = [];
+        var _query = this.find({
+            "lobby":"open",
+            "adminUser" :
+            {
+                $ne : uuid}
+        });
+        _query.exec(function (err, openGames) {
+            if (err) return next(err);
+            openGames.forEach(function (game) {
+                _listOfOpenGames.push(game.name.replace(/\s+/g, '-'));
+            });
+            if (typeof fn =="function") {
+                fn(gameList,_listOfOpenGames);
+            } else {
+                console.log("Render is a what?: " + fn )
+            }
         });
     },
 
